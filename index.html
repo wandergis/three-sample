@@ -1,11 +1,82 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
-	<meta charset="UTF-8">
-	<title>Three.js学习示例</title>
-	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Three.js学习示例</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 </head>
+
 <body>
-	<div class="map"></div>
+    <canvas id="webgl" width="400" height="400"></canvas>
+    <script type="text/javascript" src="src/libs/stats.min.js"></script>
+    <script type="text/javascript" src="lib/webgl-utils.js"></script>
+    <script type="text/javascript" src="lib/webgl-debug.js"></script>
+    <script type="text/javascript" src="lib/cuon-utils.js"></script>
+    <script type="text/javascript" src="lib/cuon-matrix.js"></script>
+    <script type="text/javascript">
+    //fps
+    var stats = new Stats();
+    stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+    document.body.appendChild(stats.dom);
+
+    function animate() {
+        stats.begin();
+        // monitored code goes here
+        stats.end();
+        requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
+
+    var canvas = document.getElementById('webgl');
+    var gl = getWebGLContext(canvas);
+
+    // gl.drawColor(1.0,0.0,0.0,1.0);
+    // gl.drawPoint(0,0,0,10);//点的位置和大小
+    // 没那么简单
+
+    // var VSHADER_SOURCE =
+    //     'void main(){\n' +
+    //     'gl_Position=vec4(0.0,0.0,0.0,1.0);\n' + //设置坐标
+    //     'gl_PointSize=10.0;\n' + //设置尺寸
+    //     '}\n';
+    // //片元着色器
+    // var FSHADER_SOURCE =
+    //     'void main(){\n' +
+    //     'gl_FragColor=vec4(1.0,0.0,0.0,1.0);\n' + //设置颜色
+    //     '}\n';
+    // gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    // gl.clear(gl.COLOR_BUFFER_BIT);
+    // gl.drawArrays(gl.POINTS, 0, 1);
+
+
+    //顶点着色器程序
+    var VSHADER_SOURCE =
+        "void main() { \n" + //设置坐标
+        "gl_Position = vec4(0.0, 0.5, 0.0, 1.0); \n" +
+        "gl_PointSize = 10.0; \n" + //设置尺寸
+        "} \n";
+
+    //片元着色器
+    var FSHADER_SOURCE =
+        "void main() {\n" + //设置颜色
+        "gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n" +
+        "}\n";
+
+
+    //初始化着色器
+    initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)
+
+
+    //设置<canvas>的背景色
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+
+    //清空<canvas>
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    //绘制一个点
+    gl.drawArrays(gl.POINTS, 0, 1);
+    </script>
 </body>
+
 </html>
